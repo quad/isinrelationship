@@ -1,85 +1,11 @@
 <?php
 
-// Accepts: A time
-// Returns: Whether or not it is Christmas
-function isItChristmas($time = null) {
-  // May as well uncomment this from 12/27 through 12/23
-  // return "NO";
-  
-  // set Christmas
-  $christmas = "12/25";
-  $ip = getIp(); 
-  
-  // debug: 
-  // $ip = "193.51.208.14"; // French IP
-  // $christmas = "12/24";
-  
-  $location = null;
-  
-  if ($ip) {
-    // db credentials, see db.php.example
-    require 'db.php';
-    DBconnect($server, $username, $password, $database);
-    
-    $location = ipRoughLocate($ip);
-    
-    // if we don't know the country, let's assume eastern time (mediocre)
-    if ($location["countryName"] == "(Unknown Country?)")
-      $local_time = easternTime($time);
-    else
-      $local_time = trueLocalTime($time, $location["lng"]);
-  }
-  else {
-    $local_time = easternTime($time);
-  }
-  
-  $isit = (strftime("%m/%d", $local_time) == $christmas);
-  
-  return $isit ? yes($location) : "NO";
+// Accepts: A Facebook UID
+// Returns: Whether or they are in a relationship
+function isInRelationship($uid = null) {
+  return array('name' => "TEST", 'answer' => "NO");
 }
-
-// used to produce a country code for the JS to work with
-function getCountryCode() {
   
-  $ip = getIp(); 
-  // debug: 
-  // $ip = "193.51.208.14"; // French IP
-  // $ip = "71.164.115.181"; // US IP
-  
-  $location = null;
-  if ($ip) {
-    // db credentials, see db.php.example
-    require 'db.php';
-    DBconnect($server, $username, $password, $database);
-    
-    $location = ipRoughLocate($ip);
-  }
-  
-  if (!$location || !$location["countryCode"] || $location["countryName"] == "(Unknown Country?)")
-    return "US";
-  else
-    return $location["countryCode"];
-}
-
-
-// Helper functions
-
-function trueLocalTime($time, $longitude) {
-
-  // establish the GMT time we're talking about
-  if (!$time) 
-    $time = gmmktime();
-  else
-    $time = gmmktime() - (time() - $time);
-  $time += (8 * 3600); // Dreamhost's box thinks PST is GMT, awesome
-
-  // estimate time zone from longitude (an hour for every 15 degrees from GMT)
-  $offset = floor($longitude / 15);
-  $true_local_time = $time + ($offset * 3600);
-
-  return $true_local_time;
-}
-
 function yes($lang) {
   // This array is IsItChristmas' sole IP
   $codes = array(
@@ -166,78 +92,78 @@ function yes($lang) {
 function no($lang) {
   // This array is IsItChristmas' sole IP
   $codes = array(
-    "US": "NO", // United States
-    "FR": "NON", // France
-    "NL": "NEE", // Netherlands
-    "ZA": "NEE", // South Africa
-    "ES": "NO", // Spain
-    "UK": "NO", // United Kingdom
-    "CA": "NO/NON", // Canada (English/French)
-    "PL": "NIE", // Poland
-    "SE": "NEJ", // Sweden
-    "LT": "NO", // Lithuania
-    "DE": "NEIN", // Germany
-    "IE": "NÍ HA", // Ireland
-    "AU": "NO", // Australia
-    "JP": "IIE", // Japan
-    "NO": "NEI", // Norway
-    "IT": "NO", // Italy
-    "HU": "NEM", // Hungary
-    "DK": "NEJ", // Denmark
-    "FI": "EI", // Finland
-    "BE": "NEE", // Belgium
-    "CL": "NO", // Chile
-    "MX": "NO", // Mexico
-    "NZ": "NO", // New Zealand
-    "AT": "NEIN", // Austria
-    "RO": "NU", // Romania
-    "CH": "NEIN/NON", // Switzerland (German/French)
-    "PT": "NÃO", // Portugal
-    "BR": "NÃO", // Brazil
-    "AR": "NO", // Argentina
-    "EE": "EI", // Estonia
-    "HR": "NE", // Croatia
-    "CN": "BÙ SHÌ", // China (Mandarin)
-    "IN": "NAHIM", // India
-    "SG": "TIDAK", // Singapore
-    "PH": "HINDI", // Phillipines
-    "IL": "LO", // Israel
-    "KR": "ANIYO", // Korea
-    "CZ": "NE", // Czech Republic
-    "SK": "NIE", // Slovakia
-    "GR": "OHI", // Greece
-    "IS": "NEI", // Iceland
-    "VE": "NO", // Venezuela
-    "SI": "NE", // Slovenia
-    "TH": "MAI CHAI", // Thailand
-    "LV": "NÉ", // Latvia
-    "RU": "NYET", // Russia
-    "HK": "M̀H HAIH", // Hong Kong (Cantonese)
-    "TR": "HAYIR", // Turkey
-    "MY": "TIDAK", // Malaysia
-    "PR": "NO", // Puerto Rico
-    "CO": "NO", // Colombia
-    "EC": "NO", // Ecuador
-    "PE": "NO", // Peru
-    "CR": "NO", // Costa Rica
-    "UY": "NO", // Uruguay
-    "CY": "OHI", // Cyprus
-    "GT": "NO", // Guatemala
-    "SV": "NO", // El Salvador
-    "DO": "NO", // Dominican Republic
-    "BM": "NÃO", // Bermuda
-    "PA": "NO", // Panama
-    "BO": "NO", // Bolivia
-    "TT": "NO", // Trinidad & Tobago
-    "DM": "NON", // Dominica (Creole)
-    "HT": "NON", // Haiti (Creole)
-    "JM": "NO", // Jamaica
-    "BB": "NO", // Barbado
-    "BZ": "NO", // Belize
-    "KY": "NO", // Cayman Islands
-    "NI": "NO", // Nicaragua
-    "PY": "NO", // Paraguay
-	"VN": "SAI" // Vietnam
+    "US" => "NO", // United States
+    "FR" => "NON", // France
+    "NL" => "NEE", // Netherlands
+    "ZA" => "NEE", // South Africa
+    "ES" => "NO", // Spain
+    "UK" => "NO", // United Kingdom
+    "CA" => "NO/NON", // Canada (English/French)
+    "PL" => "NIE", // Poland
+    "SE" => "NEJ", // Sweden
+    "LT" => "NO", // Lithuania
+    "DE" => "NEIN", // Germany
+    "IE" => "NÍ HA", // Ireland
+    "AU" => "NO", // Australia
+    "JP" => "IIE", // Japan
+    "NO" => "NEI", // Norway
+    "IT" => "NO", // Italy
+    "HU" => "NEM", // Hungary
+    "DK" => "NEJ", // Denmark
+    "FI" => "EI", // Finland
+    "BE" => "NEE", // Belgium
+    "CL" => "NO", // Chile
+    "MX" => "NO", // Mexico
+    "NZ" => "NO", // New Zealand
+    "AT" => "NEIN", // Austria
+    "RO" => "NU", // Romania
+    "CH" => "NEIN/NON", // Switzerland (German/French)
+    "PT" => "NÃO", // Portugal
+    "BR" => "NÃO", // Brazil
+    "AR" => "NO", // Argentina
+    "EE" => "EI", // Estonia
+    "HR" => "NE", // Croatia
+    "CN" => "BÙ SHÌ", // China (Mandarin)
+    "IN" => "NAHIM", // India
+    "SG" => "TIDAK", // Singapore
+    "PH" => "HINDI", // Phillipines
+    "IL" => "LO", // Israel
+    "KR" => "ANIYO", // Korea
+    "CZ" => "NE", // Czech Republic
+    "SK" => "NIE", // Slovakia
+    "GR" => "OHI", // Greece
+    "IS" => "NEI", // Iceland
+    "VE" => "NO", // Venezuela
+    "SI" => "NE", // Slovenia
+    "TH" => "MAI CHAI", // Thailand
+    "LV" => "NÉ", // Latvia
+    "RU" => "NYET", // Russia
+    "HK" => "M̀H HAIH", // Hong Kong (Cantonese)
+    "TR" => "HAYIR", // Turkey
+    "MY" => "TIDAK", // Malaysia
+    "PR" => "NO", // Puerto Rico
+    "CO" => "NO", // Colombia
+    "EC" => "NO", // Ecuador
+    "PE" => "NO", // Peru
+    "CR" => "NO", // Costa Rica
+    "UY" => "NO", // Uruguay
+    "CY" => "OHI", // Cyprus
+    "GT" => "NO", // Guatemala
+    "SV" => "NO", // El Salvador
+    "DO" => "NO", // Dominican Republic
+    "BM" => "NÃO", // Bermuda
+    "PA" => "NO", // Panama
+    "BO" => "NO", // Bolivia
+    "TT" => "NO", // Trinidad & Tobago
+    "DM" => "NON", // Dominica (Creole)
+    "HT" => "NON", // Haiti (Creole)
+    "JM" => "NO", // Jamaica
+    "BB" => "NO", // Barbado
+    "BZ" => "NO", // Belize
+    "KY" => "NO", // Cayman Islands
+    "NI" => "NO", // Nicaragua
+    "PY" => "NO", // Paraguay
+	"VN" => "SAI" // Vietnam
   );
 
   if (!$codes[$lang])
