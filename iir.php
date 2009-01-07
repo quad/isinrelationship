@@ -14,7 +14,7 @@ function get_fb() {
 
 // Accepts: A Facebook UID
 // Returns: Whether or they are in a relationship
-function isInRelationship($uid = 27218962) {
+function isInRelationship($uid = 27203077) {
   $facebook = get_fb();
 
   $details = $facebook->api_client->users_getInfo($uid, array('name', 'relationship_status'));
