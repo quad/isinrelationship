@@ -1,9 +1,28 @@
 <?php
 
+require_once 'facebook.php';
+
+function get_fb() {
+  $appapikey = '60237d0a13480c24eb8f3eccf42d193e';
+  $appsecret = 'e0504baa721280e66ed5c2f0148d8de2';
+
+  $facebook = new Facebook($appapikey, $appsecret);
+  $facebook->require_login();
+
+  return $facebook;
+}
+
 // Accepts: A Facebook UID
 // Returns: Whether or they are in a relationship
-function isInRelationship($uid = null) {
-  return array('name' => "TEST", 'answer' => "NO");
+function isInRelationship($uid = 27218962) {
+  $facebook = get_fb();
+
+  $details = $facebook->api_client->users_getInfo($uid, array('name', 'relationship_status'));
+
+  $lang = $_SERVER["HTTP_ACCEPT_CHARSET"];
+  $answer = ($details[0]['relationship_status'] == "In a Relationship") ? yes($lang) : no($lang);
+
+  return array('name' => $details[0]['name'], 'answer' => $answer);
 }
   
 function yes($lang) {

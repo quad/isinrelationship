@@ -1,5 +1,3 @@
-<?php header('Content-Type: text/html'); ?>
-
 <?php 
 require 'iir.php';
 $resp = isInRelationship();
